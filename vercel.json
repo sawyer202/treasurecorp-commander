@@ -1,0 +1,22 @@
+{
+  "builds": [
+    {
+      "src": "mobile_app_backend.py",
+      "use": "@vercel/python"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "mobile_app_backend.py"
+    }
+  ],
+  "env": {
+    "PYTHONPATH": "."
+  },
+  "functions": {
+    "mobile_app_backend.py": {
+      "maxDuration": 60
+    }
+  }
+}

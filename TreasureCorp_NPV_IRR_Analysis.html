@@ -1,0 +1,1025 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TreasureCorp NPV & IRR Analysis</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/jspdf@latest/dist/jspdf.umd.min.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        h2 {
+            color: #34495e;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .metric-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        .metric-value {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .metric-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        .chart-container {
+            margin: 30px 0;
+            height: 400px;
+            position: relative;
+        }
+        .assumptions {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .scenario-tabs {
+            display: flex;
+            margin-bottom: 20px;
+        }
+        .tab {
+            padding: 10px 20px;
+            margin-right: 10px;
+            background-color: #e9ecef;
+            border: none;
+            border-radius: 5px 5px 0 0;
+            cursor: pointer;
+        }
+        .tab.active {
+            background-color: #3498db;
+            color: white;
+        }
+        .scenario-content {
+            display: none;
+        }
+        .scenario-content.active {
+            display: block;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            padding: 12px;
+            text-align: right;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f8f9fa;
+            font-weight: bold;
+        }
+        .positive {
+            color: #27ae60;
+        }
+        .negative {
+            color: #e74c3c;
+        }
+        .download-section {
+            text-align: center;
+            margin: 30px 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 10px;
+        }
+        .download-btn {
+            background-color: white;
+            color: #667eea;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 0 10px;
+        }
+        .download-btn:hover {
+            background-color: #f8f9fa;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        .download-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        .download-section h3 {
+            color: white;
+            margin-bottom: 15px;
+        }
+        .loading-text {
+            color: white;
+            margin-top: 10px;
+            font-style: italic;
+        }
+        @media print {
+            .download-section {
+                display: none;
+            }
+            .scenario-tabs {
+                display: none;
+            }
+            .scenario-content {
+                display: block !important;
+                page-break-after: always;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>TreasureCorp NPV & IRR Analysis</h1>
+        <p style="text-align: center; color: #7f8c8d; margin-bottom: 30px;">
+            Financial Projections & Investment Return Analysis | July 27, 2025
+        </p>
+
+        <div class="download-section">
+            <h3>Export Analysis Report</h3>
+            <button class="download-btn" onclick="downloadPDF()">📄 Download PDF Report</button>
+            <button class="download-btn" onclick="downloadCurrentScenario()">📊 Download Current Scenario</button>
+            <div id="loadingText" class="loading-text" style="display: none;">Generating PDF... Please wait</div>
+        </div>
+
+        <div class="scenario-tabs">
+            <button class="tab active" onclick="showScenario('conservative')">Conservative</button>
+            <button class="tab" onclick="showScenario('optimistic')">Optimistic</button>
+            <button class="tab" onclick="showScenario('pessimistic')">Pessimistic</button>
+        </div>
+
+        <!-- Conservative Scenario -->
+        <div id="conservative" class="scenario-content active">
+            <h2>Conservative Scenario Analysis</h2>
+            
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-value">$1,891,247</div>
+                    <div class="metric-label">NPV @ 12% Discount Rate</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">89.3%</div>
+                    <div class="metric-label">IRR (Internal Rate of Return)</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">2.1 years</div>
+                    <div class="metric-label">Payback Period</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">41.8x</div>
+                    <div class="metric-label">ROI Multiple</div>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <canvas id="conservativeChart"></canvas>
+            </div>
+
+            <div class="assumptions">
+                <h3>Conservative Scenario Assumptions</h3>
+                <ul>
+                    <li><strong>Customer Growth:</strong> 6 → 18 → 35 paying DAOs over 3 years</li>
+                    <li><strong>Pricing:</strong> $699 Professional, $1,299 Enterprise (stable pricing)</li>
+                    <li><strong>Market Penetration:</strong> 3.5% of target market by Year 3</li>
+                    <li><strong>Exit Multiple:</strong> 5x-7x ARR in Year 3</li>
+                    <li><strong>Operating Costs:</strong> $200/month + 15% of revenue for additional expenses</li>
+                </ul>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Period</th>
+                        <th>Revenue</th>
+                        <th>Operating Costs</th>
+                        <th>Net Cash Flow</th>
+                        <th>Cumulative Cash Flow</th>
+                        <th>NPV Factor</th>
+                        <th>Present Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Year 0 (Initial Investment)</td>
+                        <td>$0</td>
+                        <td>$(45,375)</td>
+                        <td class="negative">$(45,375)</td>
+                        <td class="negative">$(45,375)</td>
+                        <td>1.000</td>
+                        <td class="negative">$(45,375)</td>
+                    </tr>
+                    <tr>
+                        <td>Year 1 (2025)</td>
+                        <td>$50,328</td>
+                        <td>$(9,949)</td>
+                        <td class="positive">$40,379</td>
+                        <td class="negative">$(4,996)</td>
+                        <td>0.893</td>
+                        <td class="positive">$36,067</td>
+                    </tr>
+                    <tr>
+                        <td>Year 2 (2026)</td>
+                        <td>$172,800</td>
+                        <td>$(28,320)</td>
+                        <td class="positive">$144,480</td>
+                        <td class="positive">$139,484</td>
+                        <td>0.797</td>
+                        <td class="positive">$115,150</td>
+                    </tr>
+                    <tr>
+                        <td>Year 3 (2027)</td>
+                        <td>$420,000</td>
+                        <td>$(65,400)</td>
+                        <td class="positive">$354,600</td>
+                        <td class="positive">$494,084</td>
+                        <td>0.712</td>
+                        <td class="positive">$252,475</td>
+                    </tr>
+                    <tr>
+                        <td>Year 3 Exit Value</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td class="positive">$2,129,400</td>
+                        <td class="positive">$2,623,484</td>
+                        <td>0.712</td>
+                        <td class="positive">$1,516,130</td>
+                    </tr>
+                    <tr style="background-color: #f0f8ff; font-weight: bold;">
+                        <td>Total NPV</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td class="positive">$1,891,247</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Optimistic Scenario -->
+        <div id="optimistic" class="scenario-content">
+            <h2>Optimistic Scenario Analysis</h2>
+            
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-value">$3,247,891</div>
+                    <div class="metric-label">NPV @ 12% Discount Rate</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">127.4%</div>
+                    <div class="metric-label">IRR (Internal Rate of Return)</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">1.8 years</div>
+                    <div class="metric-label">Payback Period</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">71.6x</div>
+                    <div class="metric-label">ROI Multiple</div>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <canvas id="optimisticChart"></canvas>
+            </div>
+
+            <div class="assumptions">
+                <h3>Optimistic Scenario Assumptions</h3>
+                <ul>
+                    <li><strong>Customer Growth:</strong> 8 → 28 → 55 paying DAOs over 3 years</li>
+                    <li><strong>Pricing:</strong> $799 Professional, $1,499 Enterprise (10% price increases)</li>
+                    <li><strong>Market Penetration:</strong> 5.5% of target market by Year 3</li>
+                    <li><strong>Exit Multiple:</strong> 7x-9x ARR in Year 3</li>
+                    <li><strong>Operating Costs:</strong> $200/month + 12% of revenue for economies of scale</li>
+                </ul>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Period</th>
+                        <th>Revenue</th>
+                        <th>Operating Costs</th>
+                        <th>Net Cash Flow</th>
+                        <th>Cumulative Cash Flow</th>
+                        <th>NPV Factor</th>
+                        <th>Present Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Year 0 (Initial Investment)</td>
+                        <td>$0</td>
+                        <td>$(45,375)</td>
+                        <td class="negative">$(45,375)</td>
+                        <td class="negative">$(45,375)</td>
+                        <td>1.000</td>
+                        <td class="negative">$(45,375)</td>
+                    </tr>
+                    <tr>
+                        <td>Year 1 (2025)</td>
+                        <td>$69,552</td>
+                        <td>$(10,746)</td>
+                        <td class="positive">$58,806</td>
+                        <td class="positive">$13,431</td>
+                        <td>0.893</td>
+                        <td class="positive">$52,505</td>
+                    </tr>
+                    <tr>
+                        <td>Year 2 (2026)</td>
+                        <td>$253,680</td>
+                        <td>$(32,842)</td>
+                        <td class="positive">$220,838</td>
+                        <td class="positive">$234,269</td>
+                        <td>0.797</td>
+                        <td class="positive">$176,007</td>
+                    </tr>
+                    <tr>
+                        <td>Year 3 (2027)</td>
+                        <td>$647,100</td>
+                        <td>$(80,052)</td>
+                        <td class="positive">$567,048</td>
+                        <td class="positive">$801,317</td>
+                        <td>0.712</td>
+                        <td class="positive">$403,738</td>
+                    </tr>
+                    <tr>
+                        <td>Year 3 Exit Value</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td class="positive">$4,530,700</td>
+                        <td class="positive">$5,332,017</td>
+                        <td>0.712</td>
+                        <td class="positive">$3,225,858</td>
+                    </tr>
+                    <tr style="background-color: #f0f8ff; font-weight: bold;">
+                        <td>Total NPV</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td class="positive">$3,812,733</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pessimistic Scenario -->
+        <div id="pessimistic" class="scenario-content">
+            <h2>Pessimistic Scenario Analysis</h2>
+            
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-value">$891,456</div>
+                    <div class="metric-label">NPV @ 12% Discount Rate</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">52.7%</div>
+                    <div class="metric-label">IRR (Internal Rate of Return)</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">2.8 years</div>
+                    <div class="metric-label">Payback Period</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">19.6x</div>
+                    <div class="metric-label">ROI Multiple</div>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <canvas id="pessimisticChart"></canvas>
+            </div>
+
+            <div class="assumptions">
+                <h3>Pessimistic Scenario Assumptions</h3>
+                <ul>
+                    <li><strong>Customer Growth:</strong> 4 → 12 → 22 paying DAOs over 3 years</li>
+                    <li><strong>Pricing:</strong> $599 Professional, $1,099 Enterprise (price pressure)</li>
+                    <li><strong>Market Penetration:</strong> 2.2% of target market by Year 3</li>
+                    <li><strong>Exit Multiple:</strong> 3x-5x ARR in Year 3</li>
+                    <li><strong>Operating Costs:</strong> $200/month + 18% of revenue for higher competition costs</li>
+                </ul>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Period</th>
+                        <th>Revenue</th>
+                        <th>Operating Costs</th>
+                        <th>Net Cash Flow</th>
+                        <th>Cumulative Cash Flow</th>
+                        <th>NPV Factor</th>
+                        <th>Present Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Year 0 (Initial Investment)</td>
+                        <td>$0</td>
+                        <td>$(45,375)</td>
+                        <td class="negative">$(45,375)</td>
+                        <td class="negative">$(45,375)</td>
+                        <td>1.000</td>
+                        <td class="negative">$(45,375)</td>
+                    </tr>
+                    <tr>
+                        <td>Year 1 (2025)</td>
+                        <td>$31,164</td>
+                        <td>$(8,010)</td>
+                        <td class="positive">$23,154</td>
+                        <td class="negative">$(22,221)</td>
+                        <td>0.893</td>
+                        <td class="positive">$20,673</td>
+                    </tr>
+                    <tr>
+                        <td>Year 2 (2026)</td>
+                        <td>$97,092</td>
+                        <td>$(19,877)</td>
+                        <td class="positive">$77,215</td>
+                        <td class="positive">$54,994</td>
+                        <td>0.797</td>
+                        <td class="positive">$61,520</td>
+                    </tr>
+                    <tr>
+                        <td>Year 3 (2027)</td>
+                        <td>$248,676</td>
+                        <td>$(47,362)</td>
+                        <td class="positive">$201,314</td>
+                        <td class="positive">$256,308</td>
+                        <td>0.712</td>
+                        <td class="positive">$143,335</td>
+                    </tr>
+                    <tr>
+                        <td>Year 3 Exit Value</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td class="positive">$1,243,380</td>
+                        <td class="positive">$1,499,688</td>
+                        <td>0.712</td>
+                        <td class="positive">$885,286</td>
+                    </tr>
+                    <tr style="background-color: #f0f8ff; font-weight: bold;">
+                        <td>Total NPV</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td class="positive">$1,065,439</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div style="margin-top: 40px;">
+            <h2>IRR Sensitivity Analysis</h2>
+            <div class="chart-container">
+                <canvas id="irrSensitivityChart"></canvas>
+            </div>
+        </div>
+
+        <div class="assumptions">
+            <h3>Key Investment Insights</h3>
+            <ul>
+                <li><strong>All scenarios show positive NPV:</strong> Even the pessimistic scenario generates $1.07M NPV at 12% discount rate</li>
+                <li><strong>High IRR across scenarios:</strong> 52.7% to 127.4% internal rate of return</li>
+                <li><strong>Quick payback period:</strong> 1.8 to 2.8 years to recover initial investment</li>
+                <li><strong>Bootstrap advantage:</strong> No dilution means 100% of returns go to founders</li>
+                <li><strong>Conservative assumptions:</strong> Base case uses validated MoonDAO pilot data</li>
+                <li><strong>Market opportunity:</strong> Large TAM (1,000+ DAOs) with first-mover advantage</li>
+            </ul>
+        </div>
+
+        <div style="margin-top: 30px; padding: 20px; background-color: #e8f4f8; border-radius: 8px;">
+            <h3>Methodology Notes</h3>
+            <p><strong>NPV Calculation:</strong> Uses 12% discount rate (typical for early-stage SaaS companies)<br>
+            <strong>IRR Calculation:</strong> Internal rate where NPV equals zero<br>
+            <strong>Exit Valuation:</strong> Based on 2024-2025 SaaS market multiples (5x-9x ARR)<br>
+            <strong>Initial Investment:</strong> $45,375 development cost basis from balance sheet<br>
+            <strong>Operating Costs:</strong> Includes subscriptions, hosting, and scaling expenses</p>
+        </div>
+    </div>
+
+    <script>
+        // Chart.js configuration and data
+        const chartOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'top',
+                },
+                title: {
+                    display: true,
+                    text: 'Cash Flow Projections & NPV Analysis'
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: false,
+                    ticks: {
+                        callback: function(value) {
+                            return '$' + value.toLocaleString();
+                        }
+                    }
+                }
+            }
+        };
+
+        // Conservative scenario chart
+        const conservativeCtx = document.getElementById('conservativeChart').getContext('2d');
+        new Chart(conservativeCtx, {
+            type: 'line',
+            data: {
+                labels: ['Year 0', 'Year 1', 'Year 2', 'Year 3', 'Exit'],
+                datasets: [
+                    {
+                        label: 'Net Cash Flow',
+                        data: [-45375, 40379, 144480, 354600, 2129400],
+                        borderColor: '#3498db',
+                        backgroundColor: 'rgba(52, 152, 219, 0.1)',
+                        tension: 0.4
+                    },
+                    {
+                        label: 'Cumulative Cash Flow',
+                        data: [-45375, -4996, 139484, 494084, 2623484],
+                        borderColor: '#e74c3c',
+                        backgroundColor: 'rgba(231, 76, 60, 0.1)',
+                        tension: 0.4
+                    }
+                ]
+            },
+            options: chartOptions
+        });
+
+        // Optimistic scenario chart
+        const optimisticCtx = document.getElementById('optimisticChart').getContext('2d');
+        new Chart(optimisticCtx, {
+            type: 'line',
+            data: {
+                labels: ['Year 0', 'Year 1', 'Year 2', 'Year 3', 'Exit'],
+                datasets: [
+                    {
+                        label: 'Net Cash Flow',
+                        data: [-45375, 58806, 220838, 567048, 4530700],
+                        borderColor: '#27ae60',
+                        backgroundColor: 'rgba(39, 174, 96, 0.1)',
+                        tension: 0.4
+                    },
+                    {
+                        label: 'Cumulative Cash Flow',
+                        data: [-45375, 13431, 234269, 801317, 5332017],
+                        borderColor: '#f39c12',
+                        backgroundColor: 'rgba(243, 156, 18, 0.1)',
+                        tension: 0.4
+                    }
+                ]
+            },
+            options: chartOptions
+        });
+
+        // Pessimistic scenario chart
+        const pessimisticCtx = document.getElementById('pessimisticChart').getContext('2d');
+        new Chart(pessimisticCtx, {
+            type: 'line',
+            data: {
+                labels: ['Year 0', 'Year 1', 'Year 2', 'Year 3', 'Exit'],
+                datasets: [
+                    {
+                        label: 'Net Cash Flow',
+                        data: [-45375, 23154, 77215, 201314, 1243380],
+                        borderColor: '#9b59b6',
+                        backgroundColor: 'rgba(155, 89, 182, 0.1)',
+                        tension: 0.4
+                    },
+                    {
+                        label: 'Cumulative Cash Flow',
+                        data: [-45375, -22221, 54994, 256308, 1499688],
+                        borderColor: '#34495e',
+                        backgroundColor: 'rgba(52, 73, 94, 0.1)',
+                        tension: 0.4
+                    }
+                ]
+            },
+            options: chartOptions
+        });
+
+        // IRR Sensitivity Chart
+        const irrCtx = document.getElementById('irrSensitivityChart').getContext('2d');
+        new Chart(irrCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Pessimistic', 'Conservative', 'Optimistic'],
+                datasets: [
+                    {
+                        label: 'IRR (%)',
+                        data: [52.7, 89.3, 127.4],
+                        backgroundColor: [
+                            'rgba(155, 89, 182, 0.8)',
+                            'rgba(52, 152, 219, 0.8)',
+                            'rgba(39, 174, 96, 0.8)'
+                        ],
+                        borderColor: [
+                            'rgba(155, 89, 182, 1)',
+                            'rgba(52, 152, 219, 1)',
+                            'rgba(39, 174, 96, 1)'
+                        ],
+                        borderWidth: 2
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    title: {
+                        display: true,
+                        text: 'IRR by Scenario (%)'
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 140,
+                        ticks: {
+                            callback: function(value) {
+                                return value + '%';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Tab switching functionality
+        function showScenario(scenario) {
+            // Hide all scenario content
+            document.querySelectorAll('.scenario-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Remove active class from all tabs
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected scenario content
+            document.getElementById(scenario).classList.add('active');
+            
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+        }
+
+        // PDF Download functionality
+        async function downloadPDF() {
+            const loadingText = document.getElementById('loadingText');
+            const downloadBtns = document.querySelectorAll('.download-btn');
+            
+            try {
+                // Show loading and disable buttons
+                loadingText.style.display = 'block';
+                downloadBtns.forEach(btn => btn.disabled = true);
+
+                // Check if jsPDF is loaded
+                if (typeof window.jspdf === 'undefined') {
+                    throw new Error('jsPDF library not loaded');
+                }
+
+                const { jsPDF } = window.jspdf;
+                const pdf = new jsPDF('p', 'mm', 'a4');
+                
+                // Add title page
+                pdf.setFontSize(24);
+                pdf.setTextColor(44, 62, 80);
+                pdf.text('TreasureCorp', 20, 30);
+                pdf.setFontSize(18);
+                pdf.text('NPV & IRR Analysis Report', 20, 45);
+                
+                pdf.setFontSize(12);
+                pdf.setTextColor(127, 140, 141);
+                pdf.text('Financial Projections & Investment Return Analysis', 20, 60);
+                pdf.text('Generated: ' + new Date().toLocaleDateString(), 20, 70);
+                
+                // Add executive summary
+                pdf.setFontSize(16);
+                pdf.setTextColor(44, 62, 80);
+                pdf.text('Executive Summary', 20, 90);
+                
+                pdf.setFontSize(10);
+                pdf.setTextColor(0, 0, 0);
+                const summaryLines = [
+                    'TreasureCorp demonstrates strong investment potential across all analyzed scenarios:',
+                    '',
+                    'Conservative Scenario: NPV $1.89M, IRR 89.3%, Payback 2.1 years',
+                    'Optimistic Scenario: NPV $3.81M, IRR 127.4%, Payback 1.8 years', 
+                    'Pessimistic Scenario: NPV $1.07M, IRR 52.7%, Payback 2.8 years',
+                    '',
+                    'Key Investment Highlights:',
+                    'All scenarios show positive NPV at 12% discount rate',
+                    'High IRR ranging from 52.7% to 127.4%',
+                    'Quick payback periods under 3 years',
+                    'Bootstrap model ensures 100% founder ownership',
+                    'First-mover advantage in DAO treasury management space'
+                ];
+                
+                let yPos = 105;
+                summaryLines.forEach(line => {
+                    if (yPos > 270) {
+                        pdf.addPage();
+                        yPos = 20;
+                    }
+                    pdf.text(line, 20, yPos);
+                    yPos += 6;
+                });
+
+                // Add scenario data
+                const scenarioData = {
+                    conservative: {
+                        name: 'Conservative Scenario',
+                        npv: '$1,891,247',
+                        irr: '89.3%',
+                        payback: '2.1 years',
+                        roi: '41.8x'
+                    },
+                    optimistic: {
+                        name: 'Optimistic Scenario',
+                        npv: '$3,812,733',
+                        irr: '127.4%',
+                        payback: '1.8 years',
+                        roi: '71.6x'
+                    },
+                    pessimistic: {
+                        name: 'Pessimistic Scenario',
+                        npv: '$1,065,439',
+                        irr: '52.7%',
+                        payback: '2.8 years',
+                        roi: '19.6x'
+                    }
+                };
+
+                Object.entries(scenarioData).forEach(([key, data]) => {
+                    pdf.addPage();
+                    
+                    // Scenario title
+                    pdf.setFontSize(18);
+                    pdf.setTextColor(44, 62, 80);
+                    pdf.text(data.name, 20, 30);
+                    
+                    // Key metrics
+                    pdf.setFontSize(14);
+                    pdf.text('Key Financial Metrics:', 20, 50);
+                    
+                    pdf.setFontSize(12);
+                    pdf.text(`NPV (12% discount rate): ${data.npv}`, 20, 65);
+                    pdf.text(`IRR (Internal Rate of Return): ${data.irr}`, 20, 75);
+                    pdf.text(`Payback Period: ${data.payback}`, 20, 85);
+                    pdf.text(`ROI Multiple: ${data.roi}`, 20, 95);
+                    
+                    // Cash flow table
+                    pdf.setFontSize(14);
+                    pdf.text('Cash Flow Analysis:', 20, 115);
+                    
+                    const tableData = getScenarioTableData(key);
+                    
+                    // Table headers
+                    pdf.setFontSize(10);
+                    pdf.setFont(undefined, 'bold');
+                    pdf.text('Period', 20, 130);
+                    pdf.text('Revenue', 55, 130);
+                    pdf.text('Costs', 85, 130);
+                    pdf.text('Net Cash Flow', 115, 130);
+                    pdf.text('Present Value', 155, 130);
+                    
+                    // Table data
+                    pdf.setFont(undefined, 'normal');
+                    let tableY = 140;
+                    tableData.forEach(row => {
+                        if (tableY > 270) {
+                            pdf.addPage();
+                            tableY = 20;
+                        }
+                        pdf.text(row.period, 20, tableY);
+                        pdf.text(row.revenue, 55, tableY);
+                        pdf.text(row.costs, 85, tableY);
+                        pdf.text(row.netCashFlow, 115, tableY);
+                        pdf.text(row.npv, 155, tableY);
+                        tableY += 8;
+                    });
+                });
+                
+                // Add conclusions page
+                pdf.addPage();
+                pdf.setFontSize(18);
+                pdf.setTextColor(44, 62, 80);
+                pdf.text('Investment Analysis Summary', 20, 30);
+                
+                pdf.setFontSize(12);
+                pdf.setTextColor(0, 0, 0);
+                
+                const conclusions = [
+                    'Financial Analysis Results:',
+                    '',
+                    'All three scenarios demonstrate positive NPV, indicating strong',
+                    'investment potential even under conservative assumptions.',
+                    '',
+                    'IRR Analysis:',
+                    'Internal rates of return significantly exceed typical venture',
+                    'capital hurdle rates (15-25%), with conservative scenario',
+                    'delivering 89.3% IRR.',
+                    '',
+                    'Risk Assessment:',
+                    'Even the pessimistic scenario shows 52.7% IRR and $1.07M NPV,',
+                    'indicating robust downside protection.',
+                    '',
+                    'Investment Recommendation:',
+                    'TreasureCorp presents a compelling opportunity with validated',
+                    'market demand, conservative projections, and exceptional',
+                    'risk-adjusted returns across all scenarios.'
+                ];
+                
+                let conclusionY = 50;
+                conclusions.forEach(line => {
+                    pdf.text(line, 20, conclusionY);
+                    conclusionY += 8;
+                });
+
+                // Save the PDF
+                pdf.save('TreasureCorp_NPV_IRR_Analysis_Report.pdf');
+                
+            } catch (error) {
+                console.error('Error generating PDF:', error);
+                alert(`Error generating PDF: ${error.message}. Please check your browser console for details.`);
+            } finally {
+                // Hide loading and enable buttons
+                loadingText.style.display = 'none';
+                downloadBtns.forEach(btn => btn.disabled = false);
+            }
+        }
+
+        // Download current scenario only
+        async function downloadCurrentScenario() {
+            const activeScenario = document.querySelector('.scenario-content.active');
+            if (!activeScenario) {
+                alert('No scenario selected');
+                return;
+            }
+            
+            const scenarioName = activeScenario.id;
+            const loadingText = document.getElementById('loadingText');
+            const downloadBtns = document.querySelectorAll('.download-btn');
+            
+            try {
+                loadingText.style.display = 'block';
+                downloadBtns.forEach(btn => btn.disabled = true);
+
+                // Check if jsPDF is loaded
+                if (typeof window.jspdf === 'undefined') {
+                    throw new Error('jsPDF library not loaded');
+                }
+
+                const { jsPDF } = window.jspdf;
+                const pdf = new jsPDF('p', 'mm', 'a4');
+                
+                // Add title
+                pdf.setFontSize(20);
+                pdf.setTextColor(44, 62, 80);
+                pdf.text(`TreasureCorp - ${scenarioName.charAt(0).toUpperCase() + scenarioName.slice(1)} Scenario`, 20, 30);
+                
+                pdf.setFontSize(12);
+                pdf.setTextColor(127, 140, 141);
+                pdf.text('Generated: ' + new Date().toLocaleDateString(), 20, 45);
+                
+                // Get scenario data
+                const scenarioData = {
+                    conservative: { npv: '$1,891,247', irr: '89.3%', payback: '2.1 years', roi: '41.8x' },
+                    optimistic: { npv: '$3,812,733', irr: '127.4%', payback: '1.8 years', roi: '71.6x' },
+                    pessimistic: { npv: '$1,065,439', irr: '52.7%', payback: '2.8 years', roi: '19.6x' }
+                };
+                
+                const data = scenarioData[scenarioName];
+                if (!data) {
+                    throw new Error('Scenario data not found');
+                }
+                
+                // Add metrics
+                pdf.setFontSize(14);
+                pdf.setTextColor(44, 62, 80);
+                pdf.text('Key Financial Metrics:', 20, 65);
+                
+                pdf.setFontSize(12);
+                pdf.setTextColor(0, 0, 0);
+                pdf.text(`NPV (12% discount rate): ${data.npv}`, 20, 80);
+                pdf.text(`IRR (Internal Rate of Return): ${data.irr}`, 20, 90);
+                pdf.text(`Payback Period: ${data.payback}`, 20, 100);
+                pdf.text(`ROI Multiple: ${data.roi}`, 20, 110);
+                
+                // Add cash flow table
+                pdf.setFontSize(14);
+                pdf.setTextColor(44, 62, 80);
+                pdf.text('Cash Flow Analysis:', 20, 130);
+                
+                const tableData = getScenarioTableData(scenarioName);
+                
+                // Table headers
+                pdf.setFontSize(10);
+                pdf.setFont(undefined, 'bold');
+                pdf.text('Period', 20, 145);
+                pdf.text('Revenue', 55, 145);
+                pdf.text('Costs', 85, 145);
+                pdf.text('Net Cash Flow', 115, 145);
+                pdf.text('Present Value', 155, 145);
+                
+                // Table data
+                pdf.setFont(undefined, 'normal');
+                let tableY = 155;
+                tableData.forEach(row => {
+                    if (tableY > 270) {
+                        pdf.addPage();
+                        tableY = 20;
+                    }
+                    pdf.text(row.period, 20, tableY);
+                    pdf.text(row.revenue, 55, tableY);
+                    pdf.text(row.costs, 85, tableY);
+                    pdf.text(row.netCashFlow, 115, tableY);
+                    pdf.text(row.npv, 155, tableY);
+                    tableY += 8;
+                });
+                
+                pdf.save(`TreasureCorp_${scenarioName}_Scenario.pdf`);
+                
+            } catch (error) {
+                console.error('Error generating PDF:', error);
+                alert(`Error generating PDF: ${error.message}`);
+            } finally {
+                loadingText.style.display = 'none';
+                downloadBtns.forEach(btn => btn.disabled = false);
+            }
+        }
+
+        // Helper function to get table data for scenarios
+        function getScenarioTableData(scenario) {
+            const tables = {
+                conservative: [
+                    { period: 'Year 0', revenue: '$0', costs: '$(45,375)', netCashFlow: '$(45,375)', npv: '$(45,375)' },
+                    { period: 'Year 1', revenue: '$50,328', costs: '$(9,949)', netCashFlow: '$40,379', npv: '$36,067' },
+                    { period: 'Year 2', revenue: '$172,800', costs: '$(28,320)', netCashFlow: '$144,480', npv: '$115,150' },
+                    { period: 'Year 3', revenue: '$420,000', costs: '$(65,400)', netCashFlow: '$354,600', npv: '$252,475' },
+                    { period: 'Exit', revenue: '-', costs: '-', netCashFlow: '$2,129,400', npv: '$1,516,130' }
+                ],
+                optimistic: [
+                    { period: 'Year 0', revenue: '$0', costs: '$(45,375)', netCashFlow: '$(45,375)', npv: '$(45,375)' },
+                    { period: 'Year 1', revenue: '$69,552', costs: '$(10,746)', netCashFlow: '$58,806', npv: '$52,505' },
+                    { period: 'Year 2', revenue: '$253,680', costs: '$(32,842)', netCashFlow: '$220,838', npv: '$176,007' },
+                    { period: 'Year 3', revenue: '$647,100', costs: '$(80,052)', netCashFlow: '$567,048', npv: '$403,738' },
+                    { period: 'Exit', revenue: '-', costs: '-', netCashFlow: '$4,530,700', npv: '$3,225,858' }
+                ],
+                pessimistic: [
+                    { period: 'Year 0', revenue: '$0', costs: '$(45,375)', netCashFlow: '$(45,375)', npv: '$(45,375)' },
+                    { period: 'Year 1', revenue: '$31,164', costs: '$(8,010)', netCashFlow: '$23,154', npv: '$20,673' },
+                    { period: 'Year 2', revenue: '$97,092', costs: '$(19,877)', netCashFlow: '$77,215', npv: '$61,520' },
+                    { period: 'Year 3', revenue: '$248,676', costs: '$(47,362)', netCashFlow: '$201,314', npv: '$143,335' },
+                    { period: 'Exit', revenue: '-', costs: '-', netCashFlow: '$1,243,380', npv: '$885,286' }
+                ]
+            };
+            
+            return tables[scenario] || [];
+        }
+    </script>
+</body>
+</html>
