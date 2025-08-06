@@ -10,11 +10,10 @@ import requests
 from bs4 import BeautifulSoup
 import feedparser
 import anthropic
-import openai
 from PIL import Image, ImageDraw, ImageFont
 import tweepy
 import telegram
-from linkedin_api import Linkedin
+# LinkedIn API removed for deployment simplicity
 import schedule
 import time
 import os
@@ -33,12 +32,11 @@ class DAOMonitoringLLM:
     def __init__(self):
         # API clients
         self.claude_client = anthropic.Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
-        self.openai_client = openai.OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
         
         # Social media clients
         self.twitter_api = self._setup_twitter()
         self.telegram_bot = self._setup_telegram()
-        self.linkedin_api = self._setup_linkedin()
+        # LinkedIn API removed for deployment simplicity
         
         # Database setup
         self._setup_database()
