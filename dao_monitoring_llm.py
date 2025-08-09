@@ -405,18 +405,35 @@ class DAOMonitoringLLM:
                     pass  # Use existing content if fetch fails
 
             prompt = f"""
-            Summarize this DAO-related content for social media:
+            You are creating social media content for Treasure.Corp, a platform that provides seamless governance solutions for DAOs and solves treasury management challenges.
+
+            Treasure.Corp Brand Voice:
+            - Professional but accessible
+            - Focus on governance and treasury solutions
+            - Emphasize problem-solving for DAOs
+            - Use relevant emojis (📊, 💰, 🏛️, ⚡, 🔍)
+            - Always position Treasure.Corp as the solution provider
             
+            Content to analyze:
             Title: {item['title']}
             Content: {content_text}
             Source: {item['source']}
             
-            Create 3 versions:
-            1. Twitter (250 chars max, include relevant hashtags)
-            2. LinkedIn (300 chars max, professional tone)
-            3. Telegram (400 chars max, engaging tone)
+            Create 2 versions:
             
-            Focus on key insights, impacts on DAO ecosystem, and actionable information.
+            1. Twitter (280 chars max):
+            - Start with relevant emoji (📊, 💰, 🏛️, ⚡, 🔍)
+            - Connect the news/update to treasury management or governance challenges
+            - Show how this relates to DAO operations
+            - End with "Treasure.Corp solves [specific challenge]" or similar
+            - Use hashtags: #DecentralizedTreasury #DAO #DAOFinance plus 1-2 relevant ones
+            
+            2. Telegram (400 chars max):
+            - More detailed analysis
+            - Explain implications for DAO treasuries and governance
+            - Include actionable insights
+            - Mention how Treasure.Corp addresses these challenges
+            - Community-focused tone with discussion prompts
             """
 
             response = self.claude_client.messages.create(
@@ -588,12 +605,7 @@ class DAOMonitoringLLM:
             if line.startswith('1. Twitter'):
                 current_platform = 'twitter'
                 current_text = []
-            elif line.startswith('2. LinkedIn'):
-                if current_platform:
-                    summaries[current_platform] = '\n'.join(current_text).strip()
-                current_platform = 'linkedin'
-                current_text = []
-            elif line.startswith('3. Telegram'):
+            elif line.startswith('2. Telegram'):
                 if current_platform:
                     summaries[current_platform] = '\n'.join(current_text).strip()
                 current_platform = 'telegram'
