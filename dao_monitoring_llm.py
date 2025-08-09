@@ -59,14 +59,38 @@ class DAOMonitoringLLM:
             ]
         }
         
-        # News sources for DAO monitoring
-        self.news_sources = [
-            'https://feeds.feedburner.com/oreilly/radar/atom10',
-            'https://rss.cnn.com/rss/money_news_international.rss',
-            'https://www.coindesk.com/arc/outboundfeeds/rss/',
-            'https://cointelegraph.com/rss',
-            'https://decrypt.co/feed'
+        # High-quality analytical sources for treasury analysis
+        self.analytical_sources = [
+            # Research & Analysis
+            'https://research.binance.com/en/feed',
+            'https://blog.chainalysis.com/feed/',
+            'https://messari.io/feed',
+            'https://blog.delphi.digital/rss',
+            'https://newsletter.banklesshq.com/feed',
+            
+            # Treasury & DeFi Analytics  
+            'https://blog.defillama.com/rss',
+            'https://blog.gnosis.pm/feed',
+            'https://blog.safe.global/feed',
+            'https://blog.compound.finance/rss',
+            'https://blog.uniswap.org/rss',
+            
+            # Institutional Research
+            'https://research.paradigm.xyz/feed',
+            'https://a16zcrypto.com/feed/',
+            'https://blog.coinbase.com/feed',
+            'https://insights.glassnode.com/feed/',
+            'https://blog.theblock.co/feed'
         ]
+        
+        # Treasury-specific data sources
+        self.treasury_data_sources = {
+            'defillama': 'https://api.llama.fi',
+            'dune_analytics': 'https://dune.com/api',
+            'coingecko': 'https://api.coingecko.com/api/v3',
+            'messari': 'https://data.messari.io/api',
+            'chainanalysis': 'https://api.chainalysis.com'
+        }
 
     def _setup_database(self):
         """Initialize SQLite database for tracking content and avoiding duplicates"""
@@ -316,7 +340,7 @@ class DAOMonitoringLLM:
         """Monitor RSS feeds for DAO-related news"""
         news_items = []
         
-        for feed_url in self.news_sources:
+        for feed_url in self.analytical_sources:
             try:
                 feed = feedparser.parse(feed_url)
                 
@@ -405,52 +429,50 @@ class DAOMonitoringLLM:
                     pass  # Use existing content if fetch fails
 
             prompt = f"""
-            You are creating educational social media content for @Treasure_Corp, a data-driven treasury solutions platform for DAOs.
+            You are an expert treasury analyst creating original analytical memos for @Treasure_Corp, positioning it as THE trusted source for treasury analysis breakdowns.
 
-            BRAND GUIDELINES:
-            - Educational, knowledge-focused posts that provide value
-            - Quote relevant text from sources instead of paraphrasing
-            - ALWAYS include source URL when available
-            - Use emojis that match content (🧠 for insights, 📊 for data, 💰 for treasury)
-            - Maximum 4 hashtags total
-            - Natural @Treasure_Corp mentions only when contextually relevant
-            - Avoid generic promotional language
-            
-            GOOD EXAMPLE STYLE:
-            "🧠 'DEVELOPER OWNED & GOVERNED COMMUNITY: Fostering diverse web3 builder ecosystem' - Developer DAO shows how governance models evolve. @Treasure_Corp's analytics help DAOs track similar community-driven growth patterns. Source: https://developerdao.com #DAO #Web3"
-            
-            AVOID:
-            - Unrelated promotional sentences
-            - Too many hashtags (max 4)
-            - Emojis that don't match content
-            - Generic treasury solution mentions
-            
-            Content to analyze:
+            ANALYTICAL FRAMEWORK:
+            - Act as a senior treasury analyst, not a content curator
+            - Provide original insights, not just quotes
+            - Focus on treasury management implications
+            - Use data-driven analysis with specific metrics when available
+            - Create thought leadership content that positions @Treasure_Corp as the expert voice
+
+            CONTENT STYLE (Based on modeltrain.txt feedback):
+            - Lead with analytical insight or data point
+            - Provide original commentary on treasury implications  
+            - Reference specific metrics, percentages, or financial data
+            - End with forward-looking treasury strategy insight
+            - Use @Treasure_Corp handle (not "Treasure.Corp")
+
+            SUCCESSFUL EXAMPLE PATTERN:
+            "📊 [DATA/METRIC] analysis shows [SPECIFIC FINDING]. Treasury implications: [ORIGINAL INSIGHT]. This suggests DAOs should [ACTIONABLE STRATEGY]. @Treasure_Corp tracks similar patterns across [SCOPE]. Source: [URL] #TreasuryAnalysis #DAO"
+
+            Source Content to Analyze:
             Title: {item['title']}
-            Content: {content_text[:500]}
+            Content: {content_text[:800]}
             Source URL: {item.get('url', 'N/A')}
             
-            Create 2 versions:
+            Create original analyst-style content (DO NOT just quote):
             
             1. Twitter (280 chars max):
-            - Start with appropriate emoji that matches content
-            - Quote key insight from source (in quotes)
-            - Add 1-2 sentences of analytical commentary
-            - Only mention @Treasure_Corp if naturally relevant to the insight
-            - ALWAYS end with "Source: [URL]" if available
-            - Use max 3-4 hashtags from: #DAO #Web3 #DeFi #DecentralizedTreasury #DataDrivenDAO
+            - Start with 📊/💰/🧠 + specific data point or metric
+            - Provide YOUR original analysis of treasury implications
+            - Add strategic insight for DAO treasury managers
+            - Use @Treasure_Corp naturally in analytical context
+            - End with source URL and 2-3 focused hashtags: #TreasuryAnalysis #DAO #DeFi
             
-            2. Telegram (400 chars max):
-            - Extended educational analysis
-            - Quote relevant sections from source
-            - Actionable insights for DAO operators
-            - Natural @Treasure_Corp context if applicable
-            - Include source link
+            2. Telegram (500 chars max):
+            - Extended treasury analysis memo format
+            - Include specific metrics and implications
+            - Provide actionable treasury management insights
+            - Position @Treasure_Corp as analytical authority
+            - Include source for credibility
             """
 
             response = self.claude_client.messages.create(
-                model="claude-3-haiku-20240307",
-                max_tokens=400,
+                model="claude-3-5-sonnet-20241022",
+                max_tokens=600,
                 messages=[{"role": "user", "content": prompt}]
             )
             
