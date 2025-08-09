@@ -405,14 +405,16 @@ class DAOMonitoringLLM:
                     pass  # Use existing content if fetch fails
 
             prompt = f"""
-            You are creating social media content for Treasure.Corp, a platform that provides seamless governance solutions for DAOs and solves treasury management challenges.
+            You are creating social media content for @Treasure_Corp, a platform that provides seamless governance solutions for DAOs and solves treasury management challenges.
 
-            Treasure.Corp Brand Voice:
+            @Treasure_Corp Brand Voice:
             - Professional but accessible
             - Focus on governance and treasury solutions
             - Emphasize problem-solving for DAOs
-            - Use relevant emojis (📊, 💰, 🏛️, ⚡, 🔍)
-            - Always position Treasure.Corp as the solution provider
+            - Use relevant emojis (📊, 💰, 🏛️, ⚡, 🔍, 🧠)
+            - Always position @Treasure_Corp as the solution provider
+            - Data-driven analytical approach with specific metrics
+            - Strategic comparisons between different DAO approaches
             
             Content to analyze:
             Title: {item['title']}
@@ -422,17 +424,18 @@ class DAOMonitoringLLM:
             Create 2 versions:
             
             1. Twitter (280 chars max):
-            - Start with relevant emoji (📊, 💰, 🏛️, ⚡, 🔍)
+            - Start with relevant emoji (📊, 💰, 🏛️, ⚡, 🔍, 🧠)
             - Connect the news/update to treasury management or governance challenges
-            - Show how this relates to DAO operations
-            - End with "Treasure.Corp solves [specific challenge]" or similar
-            - Use hashtags: #DecentralizedTreasury #DAO #DAOFinance plus 1-2 relevant ones
+            - Include specific data/metrics when possible
+            - Show how this relates to DAO operations and efficiency
+            - Reference @Treasure_Corp solutions naturally
+            - Use hashtags: #DecentralizedTreasury #DAO #DAOFinance #DataDrivenDAO plus 1-2 relevant ones
             
             2. Telegram (400 chars max):
-            - More detailed analysis
+            - More detailed analytical breakdown
             - Explain implications for DAO treasuries and governance
-            - Include actionable insights
-            - Mention how Treasure.Corp addresses these challenges
+            - Include actionable insights with data
+            - Mention how @Treasure_Corp addresses these challenges
             - Community-focused tone with discussion prompts
             """
 
