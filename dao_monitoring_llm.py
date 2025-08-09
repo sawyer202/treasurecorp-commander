@@ -429,6 +429,7 @@ class DAOMonitoringLLM:
             - Include specific data/metrics when possible
             - Show how this relates to DAO operations and efficiency
             - Reference @Treasure_Corp solutions naturally
+            - If manual source, include "Source: [URL]" at the end
             - Use hashtags: #DecentralizedTreasury #DAO #DAOFinance #DataDrivenDAO plus 1-2 relevant ones
             
             2. Telegram (400 chars max):
@@ -537,6 +538,63 @@ class DAOMonitoringLLM:
                 logger.info(f"Posted to Telegram: {content['title']}")
             except Exception as e:
                 logger.error(f"Telegram posting failed: {e}")
+
+    async def process_manual_source(self, url: str, content_type: str = 'article'):
+        """Process a manually submitted source URL immediately"""
+        logger.info(f"Processing manual source: {url} (type: {content_type})")
+        
+        try:
+            # Create content item from URL
+            manual_item = {
+                'source': url,
+                'title': f"Manual {content_type.title()} Submission",
+                'url': url,
+                'type': content_type,
+                'manual': True
+            }
+            
+            # Process the single item
+            processed_content = await self.process_and_summarize([manual_item])
+            
+            if processed_content:
+                item = processed_content[0]
+                
+                # Parse summaries
+                summaries = self._parse_summaries(item['summary'])
+                
+                # Generate images
+                images = self.generate_social_images(item)
+                
+                # Post to social media
+                await self.post_to_social_media(item, summaries, images)
+                
+                # Clean up temporary images
+                for img_path in images.values():
+                    try:
+                        os.remove(img_path)
+                    except:
+                        pass
+                
+                logger.info(f"Successfully processed and posted manual source: {url}")
+                return {
+                    'success': True,
+                    'message': 'Content processed and posted successfully',
+                    'summaries': summaries,
+                    'source_url': url
+                }
+            else:
+                logger.warning(f"No content could be processed from: {url}")
+                return {
+                    'success': False,
+                    'message': 'Could not process content from the provided URL'
+                }
+                
+        except Exception as e:
+            logger.error(f"Error processing manual source {url}: {e}")
+            return {
+                'success': False,
+                'message': f'Error processing source: {str(e)}'
+            }
 
     async def daily_monitoring_cycle(self):
         """Run the complete daily monitoring and posting cycle"""
@@ -649,5 +707,60 @@ def main():
     monitor = DAOMonitoringLLM()
     monitor.start_scheduler()
 
+# FastAPI server for handling manual submissions
+from fastapi import FastAPI, HTTPException
+from pydantic import BaseModel
+import uvicorn
+import threading
+
+app = FastAPI(title="TreasureCorp DAO Monitor API")
+dao_monitor = None
+
+class SourceSubmission(BaseModel):
+    url: str
+    type: str = 'article'
+
+@app.post("/api/process-source")
+async def process_source(submission: SourceSubmission):
+    """Process a manually submitted source URL"""
+    global dao_monitor
+    
+    if not dao_monitor:
+        raise HTTPException(status_code=500, detail="DAO monitor not initialized")
+    
+    if not submission.url.startswith(('http://', 'https://')):
+        raise HTTPException(status_code=400, detail="Invalid URL format")
+    
+    try:
+        result = await dao_monitor.process_manual_source(submission.url, submission.type)
+        return result
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/api/status")
+async def get_status():
+    """Get system status"""
+    return {
+        "status": "running",
+        "service": "TreasureCorp DAO Monitor",
+        "version": "1.0.0"
+    }
+
+def run_api_server():
+    """Run the FastAPI server in a separate thread"""
+    uvicorn.run(app, host="0.0.0.0", port=8080)
+
+def start_system():
+    """Start both the monitoring system and API server"""
+    global dao_monitor
+    dao_monitor = DAOMonitoringLLM()
+    
+    # Start API server in background thread
+    api_thread = threading.Thread(target=run_api_server, daemon=True)
+    api_thread.start()
+    
+    # Start the monitoring scheduler (this will block)
+    dao_monitor.start_scheduler()
+
 if __name__ == "__main__":
-    main()
+    start_system()
