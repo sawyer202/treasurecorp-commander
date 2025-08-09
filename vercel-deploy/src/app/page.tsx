@@ -34,6 +34,9 @@ interface GrowthMetric {
 export default function Dashboard() {
   const [metrics, setMetrics] = useState<GrowthMetric[]>([])
   const [loading, setLoading] = useState(true)
+  const [newSourceUrl, setNewSourceUrl] = useState('')
+  const [sourceType, setSourceType] = useState('article')
+  const [submissionStatus, setSubmissionStatus] = useState('')
 
   useEffect(() => {
     fetchMetrics()
@@ -49,6 +52,32 @@ export default function Dashboard() {
     } catch (error) {
       console.error('Error fetching metrics:', error)
       setLoading(false)
+    }
+  }
+
+  const submitNewSource = async () => {
+    if (!newSourceUrl.trim()) {
+      setSubmissionStatus('❌ Please enter a valid URL')
+      return
+    }
+
+    setSubmissionStatus('⏳ Processing...')
+    
+    try {
+      const response = await axios.post('/api/add-source', {
+        url: newSourceUrl,
+        type: sourceType
+      })
+      
+      if (response.data.success) {
+        setSubmissionStatus('✅ Source added successfully!')
+        setNewSourceUrl('')
+        setTimeout(() => setSubmissionStatus(''), 3000)
+      }
+    } catch (error) {
+      console.error('Error adding source:', error)
+      setSubmissionStatus('❌ Failed to add source')
+      setTimeout(() => setSubmissionStatus(''), 3000)
     }
   }
 
@@ -168,7 +197,7 @@ export default function Dashboard() {
         </div>
 
         {/* Quick Actions */}
-        <div className="bg-gray-900 rounded-lg p-6">
+        <div className="bg-gray-900 rounded-lg p-6 mb-8">
           <h2 className="text-2xl font-semibold mb-4">⚡ Quick Actions</h2>
           <div className="grid md:grid-cols-4 gap-4">
             <button 
@@ -200,6 +229,53 @@ export default function Dashboard() {
               ⚙️ Update Followers
             </a>
           </div>
+        </div>
+
+        {/* Add New Content Source */}
+        <div className="bg-gray-900 rounded-lg p-6">
+          <h2 className="text-2xl font-semibold mb-4">📰 Add Content Source</h2>
+          <p className="text-gray-400 mb-6">Submit a URL for immediate analysis and social media post generation</p>
+          
+          <div className="grid md:grid-cols-3 gap-4 mb-4">
+            <div>
+              <label className="block text-sm font-semibold mb-2">Source Type</label>
+              <select 
+                value={sourceType}
+                onChange={(e) => setSourceType(e.target.value)}
+                className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-white focus:border-green-400 focus:outline-none"
+              >
+                <option value="article">📄 Article/Blog Post</option>
+                <option value="report">📊 Research Report</option>
+                <option value="proposal">🏛️ DAO Proposal</option>
+                <option value="news">📰 News Update</option>
+              </select>
+            </div>
+            
+            <div className="md:col-span-2">
+              <label className="block text-sm font-semibold mb-2">URL</label>
+              <div className="flex">
+                <input 
+                  type="url"
+                  placeholder="https://example.com/dao-article"
+                  value={newSourceUrl}
+                  onChange={(e) => setNewSourceUrl(e.target.value)}
+                  className="flex-1 bg-gray-800 border border-gray-700 rounded-l-lg px-3 py-2 text-white focus:border-green-400 focus:outline-none"
+                />
+                <button 
+                  onClick={submitNewSource}
+                  className="bg-green-600 hover:bg-green-700 px-6 py-2 rounded-r-lg font-semibold transition-colors"
+                >
+                  🎯 Analyze & Post
+                </button>
+              </div>
+            </div>
+          </div>
+          
+          {submissionStatus && (
+            <div className="mt-4 p-3 bg-gray-800 rounded-lg text-center font-semibold">
+              {submissionStatus}
+            </div>
+          )}
         </div>
       </div>
     </div>
