@@ -1,0 +1,35 @@
+Starting Container
+
+INFO:     Started server process [1]
+
+INFO:     Waiting for application startup.
+
+2025-08-09 08:21:58,818 - INFO - Running background monitoring cycle...
+
+2025-08-09 08:21:58,818 - INFO - Starting daily DAO monitoring cycle...
+
+INFO:     Application startup complete.
+
+INFO:     Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)
+
+2025-08-09 08:21:59,155 - ERROR - Error fetching Snapshot data: slice(None, 20, None)
+
+2025-08-09 08:22:00,261 - ERROR - Error scraping https://developer.dao.org: Cannot connect to host developer.dao.org:443 ssl:default [Name or service not known]
+
+2025-08-09 08:22:00,856 - INFO - Collected 2 content items
+
+2025-08-09 08:22:02,715 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+
+2025-08-09 08:22:05,076 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+
+2025-08-09 08:22:05,082 - INFO - Processed 2 new items
+
+2025-08-09 08:22:05,151 - ERROR - Twitter posting failed: 'Client' object has no attribute 'media_upload'
+
+2025-08-09 08:22:05,151 - ERROR - Error posting content: 'DAOMonitoringLLM' object has no attribute 'linkedin_api'
+
+2025-08-09 08:22:05,216 - ERROR - Twitter posting failed: 'Client' object has no attribute 'media_upload'
+
+2025-08-09 08:22:05,216 - ERROR - Error posting content: 'DAOMonitoringLLM' object has no attribute 'linkedin_api'
+
+2025-08-09 08:22:05,217 - INFO - Daily monitoring cycle completed

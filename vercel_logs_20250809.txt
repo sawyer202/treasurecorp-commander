@@ -1,0 +1,78 @@
+[09:40:33.539] Running build in Washington, D.C., USA (East) – iad1
+[09:40:33.540] Build machine configuration: 2 cores, 8 GB
+[09:40:33.586] Retrieving list of deployment files...
+[09:40:33.589] Skipping build cache, deployment was triggered without cache.
+[09:40:34.063] Downloading 14 deployment files...
+[09:40:36.960] Running "vercel build"
+[09:40:39.635] Vercel CLI 44.7.3
+[09:40:39.944] Installing dependencies...
+[09:40:42.511] npm warn deprecated rimraf@3.0.2: Rimraf versions prior to v4 are no longer supported
+[09:40:43.074] npm warn deprecated inflight@1.0.6: This module is not supported, and leaks memory. Do not use it. Check out lru-cache if you want a good and tested way to coalesce async requests by a key value, which is much more comprehensive and powerful.
+[09:40:43.314] npm warn deprecated glob@7.1.7: Glob versions prior to v9 are no longer supported
+[09:40:44.036] npm warn deprecated @humanwhocodes/object-schema@2.0.3: Use @eslint/object-schema instead
+[09:40:44.116] npm warn deprecated @humanwhocodes/config-array@0.13.0: Use @eslint/config-array instead
+[09:40:45.842] npm warn deprecated eslint@8.57.1: This version is no longer supported. Please see https://eslint.org/version-support for other options.
+[09:40:50.363] 
+[09:40:50.363] added 420 packages in 10s
+[09:40:50.363] 
+[09:40:50.363] 150 packages are looking for funding
+[09:40:50.364]   run `npm fund` for details
+[09:40:50.468] Detected Next.js version: 14.0.0
+[09:40:50.473] Running "npm run build"
+[09:40:50.656] 
+[09:40:50.658] > treasurecorp-commander@1.0.0 build
+[09:40:50.658] > next build
+[09:40:50.658] 
+[09:40:51.778]  ⚠ Invalid next.config.js options detected: 
+[09:40:51.779]  ⚠     Unrecognized key(s) in object: 'appDir' at "experimental"
+[09:40:51.779]  ⚠ See more info here: https://nextjs.org/docs/messages/invalid-next-config
+[09:40:51.891] Attention: Next.js now collects completely anonymous telemetry regarding usage.
+[09:40:51.892] This information is used to shape Next.js' roadmap and prioritize features.
+[09:40:51.892] You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
+[09:40:51.892] https://nextjs.org/telemetry
+[09:40:51.893] 
+[09:40:52.051]    ▲ Next.js 14.0.0
+[09:40:52.052] 
+[09:40:52.052]    Creating an optimized production build ...
+[09:41:00.664]  ✓ Compiled successfully
+[09:41:00.666]    Linting and checking validity of types ...
+[09:41:03.706]    Collecting page data ...
+[09:41:04.824]    Generating static pages (0/5) ...
+[09:41:04.983] 
+   Generating static pages (1/5) 
+[09:41:05.002] 
+   Generating static pages (2/5) 
+[09:41:05.317] API Error: Error: Backend API error
+[09:41:05.320]     at GET (/vercel/path0/.next/server/app/api/dashboard/metrics/route.js:1:659)
+[09:41:05.320]     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+[09:41:05.320]     at async /vercel/path0/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:14:39523
+[09:41:05.338] 
+   Generating static pages (3/5) 
+[09:41:05.718] 
+ ✓ Generating static pages (5/5) 
+[09:41:05.973]    Finalizing page optimization ...
+[09:41:05.975]    Collecting build traces ...
+[09:41:12.597] 
+[09:41:12.600] Route (app)                              Size     First Load JS
+[09:41:12.601] ┌ ○ /                                    95.7 kB         183 kB
+[09:41:12.601] ├ ○ /_not-found                          875 B          88.5 kB
+[09:41:12.601] └ ○ /api/dashboard/metrics               0 B                0 B
+[09:41:12.601] + First Load JS shared by all            87.7 kB
+[09:41:12.601]   ├ chunks/472-19968b8e5aaa98c5.js       32.4 kB
+[09:41:12.601]   ├ chunks/fd9d1056-4dbbcf07a05c3f48.js  53.3 kB
+[09:41:12.601]   ├ chunks/main-app-892c3dff08e9cd4c.js  231 B
+[09:41:12.602]   └ chunks/webpack-6b2d5e2d61b46163.js   1.75 kB
+[09:41:12.602] 
+[09:41:12.602] 
+[09:41:12.602] ○  (Static)  prerendered as static HTML
+[09:41:12.602] 
+[09:41:12.693] Traced Next.js server files in: 28.538ms
+[09:41:12.776] Created all serverless functions in: 82.138ms
+[09:41:12.783] Collected static files (public/, static/, .next/static): 4.151ms
+[09:41:12.836] Build Completed in /vercel/output [33s]
+[09:41:12.966] Deploying outputs...
+[09:42:33.916] Deployment completed
+[09:42:34.805] Creating build cache...
+[09:42:44.805] Created build cache: 9.996s
+[09:42:44.806] Uploading build cache [126.18 MB]
+[09:42:46.624] Build cache uploaded: 1.823s

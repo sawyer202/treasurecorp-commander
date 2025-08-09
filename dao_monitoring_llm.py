@@ -476,25 +476,14 @@ class DAOMonitoringLLM:
         # Post to Twitter
         if self.twitter_api and 'twitter' in summaries:
             try:
-                if 'twitter' in images:
-                    media = self.twitter_api.media_upload(images['twitter'])
-                    self.twitter_api.create_tweet(
-                        text=summaries['twitter'],
-                        media_ids=[media.media_id]
-                    )
-                else:
-                    self.twitter_api.create_tweet(text=summaries['twitter'])
+                # Twitter API v2 doesn't support media uploads directly
+                # For now, just post text content
+                self.twitter_api.create_tweet(text=summaries['twitter'])
                 logger.info(f"Posted to Twitter: {content['title']}")
             except Exception as e:
                 logger.error(f"Twitter posting failed: {e}")
         
-        # Post to LinkedIn
-        if self.linkedin_api and 'linkedin' in summaries:
-            try:
-                # LinkedIn posting implementation
-                logger.info(f"Posted to LinkedIn: {content['title']}")
-            except Exception as e:
-                logger.error(f"LinkedIn posting failed: {e}")
+        # LinkedIn posting removed for deployment simplification
         
         # Post to Telegram
         if self.telegram_bot and 'telegram' in summaries:

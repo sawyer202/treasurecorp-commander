@@ -57,7 +57,7 @@ export default function Dashboard() {
   }
 
   const chartData = {
-    labels: ['Twitter', 'LinkedIn', 'Telegram'],
+    labels: ['Twitter', 'Telegram'],
     datasets: [
       {
         label: 'Current Followers',
@@ -113,12 +113,11 @@ export default function Dashboard() {
         </div>
 
         {/* Platform Metrics */}
-        <div className="grid md:grid-cols-3 gap-6 mb-8">
+        <div className="grid md:grid-cols-2 gap-6 mb-8">
           {metrics.map((metric) => (
             <div key={metric.platform} className="bg-gray-900 rounded-lg p-6">
               <h3 className="text-xl font-semibold mb-2 capitalize">
                 {metric.platform === 'twitter' && '🐦 Twitter'}
-                {metric.platform === 'linkedin' && '💼 LinkedIn'}
                 {metric.platform === 'telegram' && '📱 Telegram'}
               </h3>
               <div className="text-3xl font-bold text-green-400 mb-2">
@@ -171,16 +170,35 @@ export default function Dashboard() {
         {/* Quick Actions */}
         <div className="bg-gray-900 rounded-lg p-6">
           <h2 className="text-2xl font-semibold mb-4">⚡ Quick Actions</h2>
-          <div className="grid md:grid-cols-3 gap-4">
-            <button className="bg-green-600 hover:bg-green-700 px-6 py-3 rounded-lg font-semibold transition-colors">
-              🚀 Start Monitoring
+          <div className="grid md:grid-cols-4 gap-4">
+            <button 
+              onClick={() => {
+                setLoading(true)
+                fetchMetrics()
+                setTimeout(() => setLoading(false), 2000)
+              }}
+              className="bg-green-600 hover:bg-green-700 px-6 py-3 rounded-lg font-semibold transition-colors"
+            >
+              🚀 Refresh Data
             </button>
-            <button className="bg-blue-600 hover:bg-blue-700 px-6 py-3 rounded-lg font-semibold transition-colors">
-              📝 Create Post
+            <button 
+              onClick={() => window.open('https://twitter.com/compose/tweet?text=🚀%20Growing%20@Treasure_Corp%20community!%20Join%20us%20for%20DAO%20insights%20and%20decentralized%20finance%20updates.%20%23DAO%20%23Web3%20%23TreasureCorp', '_blank')}
+              className="bg-blue-600 hover:bg-blue-700 px-6 py-3 rounded-lg font-semibold transition-colors"
+            >
+              📝 Tweet Now
             </button>
-            <button className="bg-purple-600 hover:bg-purple-700 px-6 py-3 rounded-lg font-semibold transition-colors">
+            <button 
+              onClick={() => alert('📊 Analytics Dashboard\n\nCurrent Progress:\n• Twitter: ' + getTotalFollowers() + ' followers\n• Target: 10,000 followers\n• Progress: ' + ((getTotalFollowers() / 10000) * 100).toFixed(1) + '%')}
+              className="bg-purple-600 hover:bg-purple-700 px-6 py-3 rounded-lg font-semibold transition-colors"
+            >
               📊 View Analytics
             </button>
+            <a 
+              href="/admin"
+              className="bg-orange-600 hover:bg-orange-700 px-6 py-3 rounded-lg font-semibold transition-colors text-center"
+            >
+              ⚙️ Update Followers
+            </a>
           </div>
         </div>
       </div>
