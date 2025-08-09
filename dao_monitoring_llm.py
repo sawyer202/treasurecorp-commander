@@ -43,7 +43,7 @@ class DAOMonitoringLLM:
         
         # DAO sources configuration
         self.dao_sources = {
-            'snapshot': 'https://hub.snapshot.org/api/spaces',
+            'snapshot': 'https://hub.snapshot.org/graphql',
             'commonwealth': 'https://commonwealth.im/api',
             'governance_forums': [
                 'https://gov.uniswap.org',
@@ -148,13 +148,9 @@ class DAOMonitoringLLM:
         proposals = []
         
         async with aiohttp.ClientSession() as session:
-            # Snapshot spaces
+            # Snapshot proposals - query popular spaces directly
             try:
-                async with session.get(self.dao_sources['snapshot']) as response:
-                    if response.status == 200:
-                        spaces_data = await response.json()
-                        for space in spaces_data[:20]:  # Limit to top 20 spaces
-                            proposals.extend(await self._fetch_snapshot_proposals(session, space['id']))
+                proposals.extend(await self._fetch_snapshot_proposals(session))
             except Exception as e:
                 logger.error(f"Error fetching Snapshot data: {e}")
 
@@ -166,16 +162,26 @@ class DAOMonitoringLLM:
 
         return proposals
 
-    async def _fetch_snapshot_proposals(self, session: aiohttp.ClientSession, space_id: str) -> List[Dict]:
-        """Fetch active proposals from a Snapshot space"""
+    async def _fetch_snapshot_proposals(self, session: aiohttp.ClientSession) -> List[Dict]:
+        """Fetch active proposals from popular Snapshot spaces"""
         proposals = []
+        
+        # Popular DAO spaces to monitor
+        popular_spaces = [
+            "uniswap.eth",
+            "aave.eth", 
+            "compound-governance.eth",
+            "banklessvault.eth",
+            "gitcoindao.eth"
+        ]
+        
         query = '''
         {
           proposals(
-            where: { space: "%s", state: "active" }
+            where: { space_in: %s, state: "active" }
             orderBy: "created"
             orderDirection: desc
-            first: 5
+            first: 10
           ) {
             id
             title
@@ -188,31 +194,38 @@ class DAOMonitoringLLM:
             scores_total
             votes
             author
+            space {
+              id
+              name
+            }
           }
         }
-        ''' % space_id
+        ''' % str(popular_spaces).replace("'", '"')
 
         try:
             async with session.post(
                 'https://hub.snapshot.org/graphql',
-                json={'query': query}
+                json={'query': query},
+                headers={'Content-Type': 'application/json'}
             ) as response:
                 if response.status == 200:
                     data = await response.json()
                     for proposal in data.get('data', {}).get('proposals', []):
                         proposals.append({
                             'source': 'snapshot',
-                            'dao_name': space_id,
+                            'dao_name': proposal['space']['name'],
                             'proposal_id': proposal['id'],
                             'title': proposal['title'],
-                            'description': proposal['body'][:500],  # Truncate
+                            'description': proposal['body'][:500] if proposal['body'] else '',
                             'status': proposal['state'],
                             'votes_total': proposal['votes'],
-                            'end_date': datetime.fromtimestamp(proposal['end']),
-                            'url': f"https://snapshot.org/#/{space_id}/proposal/{proposal['id']}"
+                            'end_date': datetime.fromtimestamp(proposal['end']) if proposal['end'] else None,
+                            'url': f"https://snapshot.org/#/{proposal['space']['id']}/proposal/{proposal['id']}"
                         })
+                else:
+                    logger.error(f"Snapshot API returned status {response.status}")
         except Exception as e:
-            logger.error(f"Error fetching Snapshot proposals for {space_id}: {e}")
+            logger.error(f"Error fetching Snapshot proposals: {e}")
 
         return proposals
 
