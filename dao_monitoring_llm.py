@@ -55,7 +55,7 @@ class DAOMonitoringLLM:
             'dao_websites': [
                 'https://www.moondao.com',
                 'https://www.banklessdao.com',
-                'https://developer.dao.org'
+                'https://www.developerdao.com'
             ]
         }
         
