@@ -1,0 +1,20 @@
+1. GOOD EXAMPLE 
+
+1a. 🧠 DEVELOPER OWNED & GOVERNED COMMUNITY: Fostering a diverse web3 builder ecosystem to create a more equitable future. 🏗️💎 Empowering DAO members to LEARN, BUILD, and GOVERN the DAO's vision. @Treasure_Corp's seamless treasury solutions optimize DAO efficiency.#DecentralizedTreasury #DAO #DAOFinance #DataDrivenDAO Source: https://developerdao.com
+Reason: post from 9 august, good use of icons, link to source available. treasure_corp promotion sentence within contence of previous sentence. does not indicate partnership which is the case. could be improved: too many hashtags and quote the text taken from the source. 
+
+2b. Fascinating how on-chain treasury data reveals a DAO's governance efficiency. By tracking fund flows, participation rates, and allocation changes, we can diagnose issues and optimize decision-making. The most successful DAOs may be the most data-savvy. 🧠 #DataDrivenDAO #Web3
+reason: post from may 18, made 162 impressions 
+
+2. NOT BAD COULD BE IMPROVED EXAMPLE
+3a. 🧠 World Liberty Financial weighs $1.5B public company to hold WLFI tokens - a complex treasury management challenge for DAOs. 💰 @Treasure_Corp's data-driven governance solutions can help optimize treasury efficiency and mitigate risks. #DecentralizedTreasury #DAO #DAOFinance #DataDrivenDAO
+reason: post from 9 august, no link to source, the sentence about treasurecorp is unrelated to the event. no context for promotion and not quality info to be considered knowledge post. 
+
+3. BAD EXAMPLE
+3a. 🧠 Developer DAO's community-owned & governed model can unlock new levels of #DecentralizedTreasury management and DAO efficiency. 🏛️ @Treasure_Corp's solutions help DAOs optimize treasury workflows and governance processes for maximum impact. #DAO #DAOFinance #DataDrivenDAO
+reason: post from 9 august, the brain icon does not match the text, this text is a quote from the source and should be quoted. there is no link to the source. he sentence about treasurecorp is unrelated to the event. no context for promotion and not quality info to be considered knowledge post. 
+
+treasurecorp brand guidance, audience and post categories:
+read file: treasurecorp.py
+path C:\Users\^test\Treasurecorp\Marketing
+

@@ -1,82 +1,93 @@
-[10:44:57.532] Running build in Washington, D.C., USA (East) – iad1
-[10:44:57.532] Build machine configuration: 2 cores, 8 GB
-[10:44:57.553] Retrieving list of deployment files...
-[10:44:58.087] Downloading 16 deployment files...
-[10:44:59.134] Restored build cache from previous deployment (6bHd4CbzvyWNsxCynJrk4CNxpDbQ)
-[10:45:02.971] Running "vercel build"
-[10:45:03.549] Vercel CLI 44.7.3
-[10:45:03.864] Installing dependencies...
-[10:45:05.434] 
-[10:45:05.435] up to date in 1s
-[10:45:05.435] 
-[10:45:05.435] 150 packages are looking for funding
-[10:45:05.436]   run `npm fund` for details
-[10:45:05.462] Detected Next.js version: 14.0.0
-[10:45:05.466] Running "npm run build"
-[10:45:05.818] 
-[10:45:05.818] > treasurecorp-commander@1.0.0 build
-[10:45:05.818] > next build
-[10:45:05.819] 
-[10:45:07.076]  ⚠ Invalid next.config.js options detected: 
-[10:45:07.078]  ⚠     Unrecognized key(s) in object: 'appDir' at "experimental"
-[10:45:07.078]  ⚠ See more info here: https://nextjs.org/docs/messages/invalid-next-config
-[10:45:07.173]    ▲ Next.js 14.0.0
-[10:45:07.174] 
-[10:45:07.174]    Creating an optimized production build ...
-[10:45:09.825]  ✓ Compiled successfully
-[10:45:09.826]    Linting and checking validity of types ...
-[10:45:13.107]    Collecting page data ...
-[10:45:14.287]    Generating static pages (0/7) ...
-[10:45:14.434] 
+[15:00:54.337] Running build in Washington, D.C., USA (East) – iad1
+[15:00:54.338] Build machine configuration: 2 cores, 8 GB
+[15:00:54.384] Retrieving list of deployment files...
+[15:00:54.395] Skipping build cache, deployment was triggered without cache.
+[15:00:55.197] Downloading 16 deployment files...
+[15:00:57.654] Running "vercel build"
+[15:00:58.108] Vercel CLI 44.7.3
+[15:00:58.455] Installing dependencies...
+[15:01:00.996] npm warn deprecated rimraf@3.0.2: Rimraf versions prior to v4 are no longer supported
+[15:01:01.719] npm warn deprecated inflight@1.0.6: This module is not supported, and leaks memory. Do not use it. Check out lru-cache if you want a good and tested way to coalesce async requests by a key value, which is much more comprehensive and powerful.
+[15:01:01.985] npm warn deprecated glob@7.1.7: Glob versions prior to v9 are no longer supported
+[15:01:02.781] npm warn deprecated @humanwhocodes/object-schema@2.0.3: Use @eslint/object-schema instead
+[15:01:02.782] npm warn deprecated @humanwhocodes/config-array@0.13.0: Use @eslint/config-array instead
+[15:01:04.633] npm warn deprecated eslint@8.57.1: This version is no longer supported. Please see https://eslint.org/version-support for other options.
+[15:01:09.383] 
+[15:01:09.383] added 420 packages in 11s
+[15:01:09.384] 
+[15:01:09.384] 150 packages are looking for funding
+[15:01:09.385]   run `npm fund` for details
+[15:01:09.427] Detected Next.js version: 14.0.0
+[15:01:09.431] Running "npm run build"
+[15:01:09.550] 
+[15:01:09.551] > treasurecorp-commander@1.0.0 build
+[15:01:09.551] > next build
+[15:01:09.551] 
+[15:01:10.073]  ⚠ Invalid next.config.js options detected: 
+[15:01:10.073]  ⚠     Unrecognized key(s) in object: 'appDir' at "experimental"
+[15:01:10.073]  ⚠ See more info here: https://nextjs.org/docs/messages/invalid-next-config
+[15:01:10.081] Attention: Next.js now collects completely anonymous telemetry regarding usage.
+[15:01:10.082] This information is used to shape Next.js' roadmap and prioritize features.
+[15:01:10.082] You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
+[15:01:10.082] https://nextjs.org/telemetry
+[15:01:10.082] 
+[15:01:10.167]    ▲ Next.js 14.0.0
+[15:01:10.168] 
+[15:01:10.168]    Creating an optimized production build ...
+[15:01:19.209]  ✓ Compiled successfully
+[15:01:19.210]    Linting and checking validity of types ...
+[15:01:22.602]    Collecting page data ...
+[15:01:23.742]    Generating static pages (0/7) ...
+[15:01:23.962] 
    Generating static pages (1/7) 
-[10:45:14.549] Twitter API response: {
-[10:45:14.551]   data: {
-[10:45:14.552]     name: 'TreasureCorp',
-[10:45:14.552]     public_metrics: {
-[10:45:14.552]       followers_count: 59,
-[10:45:14.552]       following_count: 157,
-[10:45:14.552]       tweet_count: 66,
-[10:45:14.553]       listed_count: 0,
-[10:45:14.553]       like_count: 21,
-[10:45:14.553]       media_count: 4
-[10:45:14.553]     },
-[10:45:14.553]     username: 'Treasure_Corp',
-[10:45:14.554]     id: '1886316341293879296'
-[10:45:14.554]   }
-[10:45:14.554] }
-[10:45:14.711] Telegram API response: { ok: true, result: 3 }
-[10:45:14.712] 
+[15:01:24.254] Twitter API response: {
+[15:01:24.254]   data: {
+[15:01:24.254]     public_metrics: {
+[15:01:24.255]       followers_count: 59,
+[15:01:24.255]       following_count: 157,
+[15:01:24.255]       tweet_count: 72,
+[15:01:24.255]       listed_count: 0,
+[15:01:24.255]       like_count: 21,
+[15:01:24.256]       media_count: 4
+[15:01:24.256]     },
+[15:01:24.259]     id: '1886316341293879296',
+[15:01:24.259]     name: 'TreasureCorp',
+[15:01:24.259]     username: 'Treasure_Corp'
+[15:01:24.259]   }
+[15:01:24.259] }
+[15:01:24.986] Telegram API response: { ok: true, result: 3 }
+[15:01:24.987] 
    Generating static pages (3/7) 
-[10:45:15.063] 
+[15:01:25.111] 
    Generating static pages (5/7) 
-[10:45:15.344] 
+[15:01:25.361] 
  ✓ Generating static pages (7/7) 
-[10:45:15.479]    Finalizing page optimization ...
-[10:45:15.480]    Collecting build traces ...
-[10:45:21.738] 
-[10:45:21.741] Route (app)                              Size     First Load JS
-[10:45:21.741] ┌ ○ /                                    96 kB           184 kB
-[10:45:21.741] ├ ○ /_not-found                          875 B          88.5 kB
-[10:45:21.741] ├ ○ /admin                               1.46 kB        89.1 kB
-[10:45:21.741] ├ ○ /api/dashboard/metrics               0 B                0 B
-[10:45:21.742] └ λ /api/update-followers                0 B                0 B
-[10:45:21.742] + First Load JS shared by all            87.7 kB
-[10:45:21.742]   ├ chunks/472-19968b8e5aaa98c5.js       32.4 kB
-[10:45:21.742]   ├ chunks/fd9d1056-4dbbcf07a05c3f48.js  53.3 kB
-[10:45:21.742]   ├ chunks/main-app-892c3dff08e9cd4c.js  231 B
-[10:45:21.743]   └ chunks/webpack-f6e9220ae867af25.js   1.75 kB
-[10:45:21.743] 
-[10:45:21.743] 
-[10:45:21.743] ○  (Static)   prerendered as static HTML
-[10:45:21.743] λ  (Dynamic)  server-rendered on demand using Node.js
-[10:45:21.743] 
-[10:45:21.823] Traced Next.js server files in: 27.196ms
-[10:45:21.906] Created all serverless functions in: 82.516ms
-[10:45:21.913] Collected static files (public/, static/, .next/static): 3.694ms
-[10:45:21.967] Build Completed in /vercel/output [18s]
-[10:45:22.096] Deploying outputs...
-[10:45:26.898] Deployment completed
-[10:45:27.995] Creating build cache...
-[10:45:38.662] Created build cache: 10.662s
-[10:45:38.663] Uploading build cache [126.56 MB]
-[10:45:40.406] Build cache uploaded: 1.748s
+[15:01:26.130]    Finalizing page optimization ...
+[15:01:26.131]    Collecting build traces ...
+[15:01:31.410] 
+[15:01:31.413] Route (app)                              Size     First Load JS
+[15:01:31.414] ┌ ○ /                                    96 kB           184 kB
+[15:01:31.414] ├ ○ /_not-found                          875 B          88.5 kB
+[15:01:31.414] ├ ○ /admin                               1.46 kB        89.1 kB
+[15:01:31.414] ├ ○ /api/dashboard/metrics               0 B                0 B
+[15:01:31.415] └ λ /api/update-followers                0 B                0 B
+[15:01:31.415] + First Load JS shared by all            87.7 kB
+[15:01:31.415]   ├ chunks/472-19968b8e5aaa98c5.js       32.4 kB
+[15:01:31.415]   ├ chunks/fd9d1056-4dbbcf07a05c3f48.js  53.3 kB
+[15:01:31.415]   ├ chunks/main-app-892c3dff08e9cd4c.js  231 B
+[15:01:31.417]   └ chunks/webpack-8559d20f163e05e0.js   1.75 kB
+[15:01:31.417] 
+[15:01:31.417] 
+[15:01:31.417] ○  (Static)   prerendered as static HTML
+[15:01:31.417] λ  (Dynamic)  server-rendered on demand using Node.js
+[15:01:31.417] 
+[15:01:31.507] Traced Next.js server files in: 27.536ms
+[15:01:31.594] Created all serverless functions in: 86.273ms
+[15:01:31.602] Collected static files (public/, static/, .next/static): 4.294ms
+[15:01:31.654] Build Completed in /vercel/output [33s]
+[15:01:31.788] Deploying outputs...
+[15:01:38.437] Deployment completed
+[15:01:39.241] Creating build cache...
+[15:01:49.014] Created build cache: 9.771s
+[15:01:49.014] Uploading build cache [126.20 MB]
+[15:01:50.772] Build cache uploaded: 1.759s

@@ -405,39 +405,47 @@ class DAOMonitoringLLM:
                     pass  # Use existing content if fetch fails
 
             prompt = f"""
-            You are creating social media content for @Treasure_Corp, a platform that provides seamless governance solutions for DAOs and solves treasury management challenges.
+            You are creating educational social media content for @Treasure_Corp, a data-driven treasury solutions platform for DAOs.
 
-            @Treasure_Corp Brand Voice:
-            - Professional but accessible
-            - Focus on governance and treasury solutions
-            - Emphasize problem-solving for DAOs
-            - Use relevant emojis (📊, 💰, 🏛️, ⚡, 🔍, 🧠)
-            - Always position @Treasure_Corp as the solution provider
-            - Data-driven analytical approach with specific metrics
-            - Strategic comparisons between different DAO approaches
+            BRAND GUIDELINES:
+            - Educational, knowledge-focused posts that provide value
+            - Quote relevant text from sources instead of paraphrasing
+            - ALWAYS include source URL when available
+            - Use emojis that match content (🧠 for insights, 📊 for data, 💰 for treasury)
+            - Maximum 4 hashtags total
+            - Natural @Treasure_Corp mentions only when contextually relevant
+            - Avoid generic promotional language
+            
+            GOOD EXAMPLE STYLE:
+            "🧠 'DEVELOPER OWNED & GOVERNED COMMUNITY: Fostering diverse web3 builder ecosystem' - Developer DAO shows how governance models evolve. @Treasure_Corp's analytics help DAOs track similar community-driven growth patterns. Source: https://developerdao.com #DAO #Web3"
+            
+            AVOID:
+            - Unrelated promotional sentences
+            - Too many hashtags (max 4)
+            - Emojis that don't match content
+            - Generic treasury solution mentions
             
             Content to analyze:
             Title: {item['title']}
-            Content: {content_text}
-            Source: {item['source']}
+            Content: {content_text[:500]}
+            Source URL: {item.get('url', 'N/A')}
             
             Create 2 versions:
             
             1. Twitter (280 chars max):
-            - Start with relevant emoji (📊, 💰, 🏛️, ⚡, 🔍, 🧠)
-            - Connect the news/update to treasury management or governance challenges
-            - Include specific data/metrics when possible
-            - Show how this relates to DAO operations and efficiency
-            - Reference @Treasure_Corp solutions naturally
-            - If manual source, include "Source: [URL]" at the end
-            - Use hashtags: #DecentralizedTreasury #DAO #DAOFinance #DataDrivenDAO plus 1-2 relevant ones
+            - Start with appropriate emoji that matches content
+            - Quote key insight from source (in quotes)
+            - Add 1-2 sentences of analytical commentary
+            - Only mention @Treasure_Corp if naturally relevant to the insight
+            - ALWAYS end with "Source: [URL]" if available
+            - Use max 3-4 hashtags from: #DAO #Web3 #DeFi #DecentralizedTreasury #DataDrivenDAO
             
             2. Telegram (400 chars max):
-            - More detailed analytical breakdown
-            - Explain implications for DAO treasuries and governance
-            - Include actionable insights with data
-            - Mention how @Treasure_Corp addresses these challenges
-            - Community-focused tone with discussion prompts
+            - Extended educational analysis
+            - Quote relevant sections from source
+            - Actionable insights for DAO operators
+            - Natural @Treasure_Corp context if applicable
+            - Include source link
             """
 
             response = self.claude_client.messages.create(
