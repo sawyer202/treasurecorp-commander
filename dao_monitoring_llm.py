@@ -444,9 +444,15 @@ class DAOMonitoringLLM:
             - Reference specific metrics, percentages, or financial data
             - End with forward-looking treasury strategy insight
             - Use @Treasure_Corp handle (not "Treasure.Corp")
+            - KEEP LANGUAGE ACCESSIBLE: Avoid overly technical finance jargon
+            - Use standard DeFi/Web3/DAO terminology that broad audience understands
+            - Focus on practical DAO treasury takeaways, not complex financial theory
 
             SUCCESSFUL EXAMPLE PATTERN:
             "📊 [DATA/METRIC] analysis shows [SPECIFIC FINDING]. Treasury implications: [ORIGINAL INSIGHT]. This suggests DAOs should [ACTIONABLE STRATEGY]. @Treasure_Corp tracks similar patterns across [SCOPE]. Source: [URL] #TreasuryAnalysis #DAO"
+            
+            TONE EXAMPLE (Good balance - analytical but accessible):
+            "📊 40% of major DAOs now diversify treasuries beyond native tokens. Smart move: reduces volatility risk by 60%. This trend shows DAOs maturing from speculation to preservation. @Treasure_Corp data confirms diversified treasuries perform better long-term."
 
             Source Content to Analyze:
             Title: {item['title']}
